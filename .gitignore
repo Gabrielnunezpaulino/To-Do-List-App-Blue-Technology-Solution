@@ -1,0 +1,19 @@
+# Dependencias
+node_modules/
+
+# Archivos de build y cache
+build/
+dist/
+.cache/
+.env
+
+# Archivos de log
+*.log
+
+# Archivos del sistema
+.DS_Store
+
+# Archivos de cache de npm y yarn
+npm-debug.log*
+yarn-error.log*
+
