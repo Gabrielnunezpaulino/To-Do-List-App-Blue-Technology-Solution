@@ -11,7 +11,7 @@ function TodoItem({ todo, toggleComplete, editTodo, deleteTodo }) {
                 <div className="flex-1">
                     <div className="flex items-center gap-3 mb-2">
                         <button
-                            onClick={() => toggleComplete(todo.id)}
+                            onClick={() => toggleComplete(todo._id)}
                             className={`w-7 h-7 rounded-full border-2 flex items-center justify-center text-lg font-bold transition ${
                                 todo.completed
                                     ? "bg-green-400 border-green-400 text-white"
@@ -45,7 +45,7 @@ function TodoItem({ todo, toggleComplete, editTodo, deleteTodo }) {
                         Editar
                     </button>
                     <button
-                        onClick={() => deleteTodo(todo.id)}
+                        onClick={() => deleteTodo(todo._id)}
                         className="bg-pink-500 hover:bg-pink-600 text-white px-4 py-1 rounded font-bold shadow transition"
                     >
                         Eliminar
@@ -56,4 +56,4 @@ function TodoItem({ todo, toggleComplete, editTodo, deleteTodo }) {
     )
 }
 
-export default TodoItem
+export default TodoItem;

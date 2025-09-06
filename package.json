@@ -1,0 +1,15 @@
+{
+  "name": "todo-list-app",
+  "version": "1.0.0",
+  "description": "Una aplicación de lista de tareas construida con React, Tailwind CSS y Node.js.",
+  "author": "Gabriel Nuñez Paulino",
+  "main": "index.js",
+  "scripts": {
+    "start": "concurrently \"npm start --prefix frontend\" \"npm start --prefix backend\"",
+    "dev": "concurrently \"npm start --prefix frontend\" \"npm start --prefix backend\"",
+    "install-all": "concurrently \"npm install --prefix frontend\" \"npm install --prefix backend\""
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}

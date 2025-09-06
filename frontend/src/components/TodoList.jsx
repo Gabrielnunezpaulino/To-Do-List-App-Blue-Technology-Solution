@@ -14,7 +14,7 @@ function TodoList({ todos, toggleComplete, editTodo, deleteTodo }) {
         <div className="grid gap-4">
             {todos.map((todo) => (
                 <TodoItem
-                    key={todo.id}
+                    key={todo._id}
                     todo={todo}
                     toggleComplete={toggleComplete}
                     editTodo={editTodo}

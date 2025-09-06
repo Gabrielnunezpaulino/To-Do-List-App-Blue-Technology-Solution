@@ -1,6 +1,8 @@
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import TodoList from "./components/TodoList"
 import Modal from "./components/Modal"
+
+const API_URL = "http://localhost:4000/api/todos"
 
 function App() {
     const [todos, setTodos] = useState([])
@@ -10,55 +12,68 @@ function App() {
     const [search, setSearch] = useState("")
     const [filter, setFilter] = useState("all")
 
-    
+    useEffect(() => {
+        fetch(API_URL)
+            .then(res => res.json())
+            .then(data => setTodos(data))
+    }, [])
+
     const openModal = () => setIsModalOpen(true)
-    
+
     const resetForm = () => {
         setFormData({ title: "", content: "" })
         setEditingTodo(null)
         setIsModalOpen(false)
     }
-    
-    const handleSubmit = (e) => {
+
+    const handleSubmit = async (e) => {
         e.preventDefault()
         if (editingTodo) {
-            setTodos((prev) =>
-                prev.map((todo) =>
-                    todo.id === editingTodo.id ? { ...todo, ...formData } : todo
-                )
-            )
+            
+            const res = await fetch(`${API_URL}/${editingTodo._id}`, {
+                method: "PUT",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify({ ...formData, completed: editingTodo.completed }),
+            })
+            const updated = await res.json()
+            setTodos(todos.map(todo => todo._id === updated._id ? updated : todo))
         } else {
-            setTodos((prev) => [
-                ...prev,
-                {
-                    id: Date.now(),
-                    title: formData.title,
-                    content: formData.content,
-                    completed: false,
-                    createdAt: new Date(),
-                },
-            ])
+            
+            const res = await fetch(API_URL, {
+                method: "POST",
+                headers: { "Content-Type": "application/json" },
+                body: JSON.stringify(formData),
+            })
+            const newTodo = await res.json()
+            setTodos([newTodo, ...todos])
+
         }
         resetForm()
     }
-    
-    const toggleComplete = (id) => {
-        setTodos((prev) =>
-            prev.map((todo) =>
-                todo.id === id ? { ...todo, completed: !todo.completed } : todo
-            )
-        )
+
+    const toggleComplete = async (id) => {
+        const todo = todos.find(t => t._id === id)
+        const res = await fetch(`${API_URL}/${id}`, {
+            method: "PUT",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({ ...todo, completed: !todo.completed }),
+        })
+        const updated = await res.json()
+        setTodos(todos.map(t => t._id === id ? updated : t))
     }
-    
     const editTodo = (todo) => {
         setFormData({ title: todo.title, content: todo.content })
         setEditingTodo(todo)
         setIsModalOpen(true)
     }
-    
-    const deleteTodo = (id) => setTodos((prev) => prev.filter((todo) => todo.id !== id))
 
-    
+    const deleteTodo = async (id) => {
+        console.log("Eliminando todo con id:", id); 
+        await fetch(`${API_URL}/${id}`, { method: "DELETE" })
+        setTodos(todos.filter(todo => todo._id !== id))
+    }
+
+
     const filteredTodos = todos
         .filter((todo) => {
             if (filter === "completed") return todo.completed
@@ -73,13 +88,13 @@ function App() {
     return (
         <div className="min-h-screen bg-gradient-to-br from-blue-50 to-blue-100 py-10">
             <div className="max-w-3xl mx-auto px-4">
-                
+
                 <div className="text-center mb-8">
                     <h1 className="text-5xl text-indigo-700 font-extrabold tracking-tight drop-shadow-lg mb-2">To-Do List</h1>
                     <p className="text-indigo-400 text-lg font-semibold">Organiza tus tareas de manera eficiente</p>
                 </div>
 
-                
+
                 <div className="flex flex-col sm:flex-row items-center gap-4 mb-8">
                     <button
                         onClick={openModal}
@@ -105,7 +120,7 @@ function App() {
                     </select>
                 </div>
 
-                
+
                 <TodoList
                     todos={filteredTodos}
                     toggleComplete={toggleComplete}
@@ -113,7 +128,7 @@ function App() {
                     deleteTodo={deleteTodo}
                 />
 
-                
+
                 <Modal
                     isOpen={isModalOpen}
                     onClose={resetForm}

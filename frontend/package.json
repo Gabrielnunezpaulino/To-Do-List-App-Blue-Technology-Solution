@@ -1,6 +1,8 @@
 {
     "name": "todo-frontend",
     "version": "1.0.0",
+    "description": "Una aplicación de lista de tareas construida con React, Tailwind CSS y Node.js.",
+    "author": "Gabriel Nuñez Paulino",
     "private": true,
     "dependencies": {
         "react": "^18.2.0",

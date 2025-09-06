@@ -50,4 +50,4 @@ function Modal({ isOpen, onClose, onSubmit, formData, setFormData, editingTodo }
     )
 }
 
-export default Modal
+export default Modal;
